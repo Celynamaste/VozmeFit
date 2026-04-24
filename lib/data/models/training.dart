@@ -15,6 +15,20 @@ class Training {
     required this.exercises,
   });
 
+  factory Training.fromMap(String id, Map<String, dynamic> data) {
+    final exercises = (data['exercises'] as List? ?? [])
+        .map((e) => Exercise.fromMap(e as Map<String, dynamic>))
+        .toList();
+
+    return Training(
+      id: id,
+      title: data['title'] as String? ?? '',
+      level: data['level'] as String? ?? '',
+      type: data['type'] as String? ?? '',
+      exercises: exercises,
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
