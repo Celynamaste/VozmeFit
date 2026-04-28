@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-import '../../data/models/exercise.dart';
-import '../../data/models/training.dart';
-import '../../data/models/exercise_types.dart';
-import '../../data/firebase/training_service.dart';
+import '../../../data/models/exercise.dart';
+import '../../../data/models/training.dart';
+import '../../../data/models/exercise_types.dart';
+import '../../../data/firebase/training_service.dart';
 
 class CreateTrainingPage extends StatefulWidget {
+  const CreateTrainingPage({super.key});
+
   @override
-  _CreateTrainingPageState createState() => _CreateTrainingPageState();
+  State<CreateTrainingPage> createState() => _CreateTrainingPageState();
 }
 
 class _CreateTrainingPageState extends State<CreateTrainingPage> {
@@ -15,6 +17,13 @@ class _CreateTrainingPageState extends State<CreateTrainingPage> {
   final levelController = TextEditingController();
 
   List<Exercise> exercises = [];
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    levelController.dispose();
+    super.dispose();
+  }
 
   // -------------------------
   // AÑADIR EJERCICIO
@@ -25,34 +34,36 @@ class _CreateTrainingPageState extends State<CreateTrainingPage> {
     final durationCtrl = TextEditingController();
     String? selectedExerciseType;
 
+    // Capturamos el ScaffoldMessenger antes de abrir el diálogo
+    final messenger = ScaffoldMessenger.of(context);
+
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (dialogContext) {
         return AlertDialog(
-          title: Text("Añadir ejercicio"),
+          title: const Text("Añadir ejercicio"),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
                   controller: nameCtrl,
-                  decoration: InputDecoration(labelText: "Nombre"),
+                  decoration: const InputDecoration(labelText: "Nombre"),
                 ),
                 TextField(
                   controller: descCtrl,
-                  decoration: InputDecoration(labelText: "Descripción"),
+                  decoration: const InputDecoration(labelText: "Descripción"),
                 ),
                 TextField(
                   controller: durationCtrl,
-                  decoration: InputDecoration(labelText: "Duración (segundos)"),
+                  decoration: const InputDecoration(labelText: "Duración (segundos)"),
                   keyboardType: TextInputType.number,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
 
                 // SELECTOR DE TIPO
                 DropdownButtonFormField<String>(
-                  initialValue: selectedExerciseType,
-                  decoration: InputDecoration(labelText: "Tipo de ejercicio"),
+                  decoration: const InputDecoration(labelText: "Tipo de ejercicio"),
                   items: ExerciseTypes.types.map((type) {
                     return DropdownMenuItem(
                       value: type,
@@ -69,12 +80,14 @@ class _CreateTrainingPageState extends State<CreateTrainingPage> {
           actions: [
             TextButton(
               onPressed: () {
+                final duration = int.tryParse(durationCtrl.text);
                 if (nameCtrl.text.isEmpty ||
                     descCtrl.text.isEmpty ||
                     durationCtrl.text.isEmpty ||
+                    duration == null ||
                     selectedExerciseType == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Completa todos los campos")),
+                  messenger.showSnackBar(
+                    const SnackBar(content: Text("Completa todos los campos")),
                   );
                   return;
                 }
@@ -84,20 +97,24 @@ class _CreateTrainingPageState extends State<CreateTrainingPage> {
                     Exercise(
                       name: nameCtrl.text,
                       description: descCtrl.text,
-                      duration: int.parse(durationCtrl.text),
+                      duration: duration,
                       type: selectedExerciseType!,
                     ),
                   );
                 });
 
-                Navigator.pop(context);
+                Navigator.pop(dialogContext);
               },
-              child: Text("Guardar"),
+              child: const Text("Guardar"),
             )
           ],
         );
       },
-    );
+    ).then((_) {
+      nameCtrl.dispose();
+      descCtrl.dispose();
+      durationCtrl.dispose();
+    });
   }
 
   // -------------------------
@@ -108,7 +125,7 @@ class _CreateTrainingPageState extends State<CreateTrainingPage> {
         levelController.text.isEmpty ||
         exercises.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Completa todos los campos")),
+        const SnackBar(content: Text("Completa todos los campos")),
       );
       return;
     }
@@ -117,17 +134,18 @@ class _CreateTrainingPageState extends State<CreateTrainingPage> {
       id: const Uuid().v4(),
       title: titleController.text,
       level: levelController.text,
-      type: "Personalizado", // Puedes cambiarlo si quieres
+      type: "Personalizado",
       exercises: exercises,
     );
 
     await TrainingService().saveTraining(training);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Entrenamiento guardado")),
-    );
-
-    Navigator.pop(context);
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Entrenamiento guardado")),
+      );
+      Navigator.pop(context);
+    }
   }
 
   // -------------------------
@@ -136,29 +154,29 @@ class _CreateTrainingPageState extends State<CreateTrainingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Crear entrenamiento")),
+      appBar: AppBar(title: const Text("Crear entrenamiento")),
       floatingActionButton: FloatingActionButton(
         onPressed: addExercise,
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             TextField(
               controller: titleController,
-              decoration: InputDecoration(labelText: "Título"),
+              decoration: const InputDecoration(labelText: "Título"),
             ),
             TextField(
               controller: levelController,
-              decoration: InputDecoration(labelText: "Nivel"),
+              decoration: const InputDecoration(labelText: "Nivel"),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text("Ejercicios añadidos: ${exercises.length}"),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: saveTraining,
-              child: Text("Guardar entrenamiento"),
+              child: const Text("Guardar entrenamiento"),
             ),
           ],
         ),

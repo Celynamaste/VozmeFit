@@ -6,30 +6,25 @@ class AuthService {
 
   // LOGIN CON GOOGLE
   Future<UserCredential?> signInWithGoogle() async {
-    try {
-      final GoogleSignIn googleSignIn = GoogleSignIn(
-        scopes: [
-          'email',
-          'https://www.googleapis.com/auth/userinfo.profile',
-        ],
-      );
+    final GoogleSignIn googleSignIn = GoogleSignIn(
+      scopes: [
+        'email',
+        'https://www.googleapis.com/auth/userinfo.profile',
+      ],
+    );
 
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-      if (googleUser == null) return null;
+    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+    if (googleUser == null) return null; // El usuario canceló el login
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
 
-      final credential = GoogleAuthProvider.credential(
-        idToken: googleAuth.idToken,
-        accessToken: googleAuth.accessToken,
-      );
+    final credential = GoogleAuthProvider.credential(
+      idToken: googleAuth.idToken,
+      accessToken: googleAuth.accessToken,
+    );
 
-      return await _auth.signInWithCredential(credential);
-    } catch (e) {
-      print("Error en Google Sign-In: $e");
-      return null;
-    }
+    return await _auth.signInWithCredential(credential);
   }
 
   // LOGIN CON EMAIL
