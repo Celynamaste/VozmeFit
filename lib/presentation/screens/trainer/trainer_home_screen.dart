@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:vozmefit/app/router.dart';
 import 'package:vozmefit/data/firebase/training_service.dart';
 import 'package:vozmefit/data/models/exercise.dart';
 import 'package:vozmefit/data/models/training.dart';
@@ -14,7 +15,7 @@ class TrainerHomeScreen extends StatefulWidget {
 
 class _TrainerHomeScreenState extends State<TrainerHomeScreen> {
   final _service = TrainingService();
-  late Future<List<Training>> _trainingsFuture;
+  late Stream<List<Training>> _trainingsStream;
   String _filterLevel = 'Todos';
 
   static const _levels = ['Todos', 'Principiante', 'Intermedio', 'Avanzado'];
@@ -22,13 +23,7 @@ class _TrainerHomeScreenState extends State<TrainerHomeScreen> {
   @override
   void initState() {
     super.initState();
-    _reload();
-  }
-
-  void _reload() {
-    setState(() {
-      _trainingsFuture = _service.getTrainings();
-    });
+    _trainingsStream = _service.streamTrainings();
   }
 
   Future<void> _delete(String id) async {
@@ -51,19 +46,25 @@ class _TrainerHomeScreenState extends State<TrainerHomeScreen> {
       ),
     );
     if (confirm == true) {
-      await _service.deleteTraining(id);
-      _reload();
+      try {
+        await _service.deleteTraining(id);
+      } catch (_) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Error al eliminar la rutina')),
+          );
+        }
+      }
     }
   }
 
-  void _goToForm({Training? training}) async {
-    await Navigator.push(
+  void _goToForm({Training? training}) {
+    Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => TrainerTrainingForm(training: training),
       ),
     );
-    _reload();
   }
 
   /// Crea 3 entrenamientos de ejemplo en Firestore (solo en modo debug)
@@ -135,7 +136,6 @@ class _TrainerHomeScreenState extends State<TrainerHomeScreen> {
       await _service.saveTraining(t);
     }
 
-    _reload();
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('3 entrenamientos de ejemplo creados')));
@@ -161,7 +161,7 @@ class _TrainerHomeScreenState extends State<TrainerHomeScreen> {
             icon: const Icon(Icons.logout),
             tooltip: 'Cerrar sesión',
             onPressed: () =>
-                Navigator.pushReplacementNamed(context, '/login'),
+                Navigator.pushReplacementNamed(context, AppRouter.login),
           ),
         ],
       ),
@@ -208,8 +208,8 @@ class _TrainerHomeScreenState extends State<TrainerHomeScreen> {
 
           // ─── LISTA DE RUTINAS ───────────────────────────────
           Expanded(
-            child: FutureBuilder<List<Training>>(
-              future: _trainingsFuture,
+            child: StreamBuilder<List<Training>>(
+              stream: _trainingsStream,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());

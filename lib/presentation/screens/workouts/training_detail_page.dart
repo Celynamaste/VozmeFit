@@ -63,24 +63,6 @@ class TrainingDetailPage extends StatelessWidget {
 
   const TrainingDetailPage({super.key, required this.training});
 
-  Widget _gradientBanner(String type) {
-    final colors = _exerciseColors[type] ??
-        [const Color(0xFF263238), const Color(0xFF546E7A)];
-    final icon = _exerciseIcons[type] ?? Icons.fitness_center;
-    return Container(
-      height: 100,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: colors,
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
-      child: Icon(icon, color: Colors.white30, size: 48),
-    );
-  }
-
   Widget _gradientBannerSmall(String type) {
     final colors = _exerciseColors[type] ??
         [const Color(0xFF263238), const Color(0xFF546E7A)];
@@ -267,18 +249,23 @@ class TrainingDetailPage extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () async {
-                await service.logWorkout(
-                  trainingId: training.id,
-                  notes: notesCtrl.text.trim(),
-                  weight: double.tryParse(weightCtrl.text),
-                  reps: int.tryParse(repsCtrl.text),
-                  sensation: sensation,
-                );
-                Navigator.pop(dialogCtx);
-                messenger.showSnackBar(
-                  const SnackBar(
-                      content: Text('¡Entrenamiento registrado!')),
-                );
+                try {
+                  await service.logWorkout(
+                    trainingId: training.id,
+                    notes: notesCtrl.text.trim(),
+                    weight: double.tryParse(weightCtrl.text),
+                    reps: int.tryParse(repsCtrl.text),
+                    sensation: sensation,
+                  );
+                  Navigator.pop(dialogCtx);
+                  messenger.showSnackBar(
+                    const SnackBar(content: Text('¡Entrenamiento registrado!')),
+                  );
+                } catch (_) {
+                  messenger.showSnackBar(
+                    const SnackBar(content: Text('Error al guardar. Comprueba tu conexión.')),
+                  );
+                }
               },
               child: const Text('Guardar'),
             ),

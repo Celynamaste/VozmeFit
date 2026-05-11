@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/exercise.dart';
 import '../models/training.dart';
 
 class TrainingService {

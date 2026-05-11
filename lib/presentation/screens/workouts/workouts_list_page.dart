@@ -200,43 +200,4 @@ class _WorkoutsListPageState extends State<WorkoutsListPage> {
   }
 }
 
-class TrainingDetailPage extends StatelessWidget {
-  final Training training;
-
-  const TrainingDetailPage({super.key, required this.training});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(training.title),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Nivel: ${training.level}", style: const TextStyle(fontSize: 18)),
-            Text("Tipo: ${training.type}", style: const TextStyle(fontSize: 18)),
-            const SizedBox(height: 20),
-            const Text("Ejercicios:", style: TextStyle(fontSize: 20)),
-            const SizedBox(height: 10),
-            Expanded(
-              child: ListView.builder(
-                itemCount: training.exercises.length,
-                itemBuilder: (context, index) {
-                  final e = training.exercises[index];
-                  return ListTile(
-                    title: Text(e.name),
-                    subtitle: Text("${e.type} • ${e.duration}s"),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 

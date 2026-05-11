@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () async {
               await context.read<AuthProvider>().logout();
               if (context.mounted) {
-                Navigator.pushReplacementNamed(context, '/login');
+                Navigator.pushReplacementNamed(context, AppRouter.login);
               }
             },
           ),

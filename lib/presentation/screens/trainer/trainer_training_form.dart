@@ -16,6 +16,7 @@ class TrainerTrainingForm extends StatefulWidget {
 }
 
 class _TrainerTrainingFormState extends State<TrainerTrainingForm> {
+  final _formKey = GlobalKey<FormState>();
   final _service = TrainingService();
   final _titleCtrl = TextEditingController();
   final _typeCtrl = TextEditingController();
@@ -85,7 +86,7 @@ class _TrainerTrainingFormState extends State<TrainerTrainingForm> {
               ),
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(
-                value: selectedType,
+                initialValue: selectedType,
                 decoration:
                     const InputDecoration(labelText: 'Tipo de ejercicio'),
                 items: ExerciseTypes.types
@@ -141,11 +142,7 @@ class _TrainerTrainingFormState extends State<TrainerTrainingForm> {
 
   // ─── GUARDAR RUTINA ────────────────────────────────────────────────────────
   Future<void> _save() async {
-    if (_titleCtrl.text.isEmpty || _typeCtrl.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Completa título y tipo')));
-      return;
-    }
+    if (!_formKey.currentState!.validate()) return;
     if (_exercises.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Añade al menos un ejercicio')));
@@ -162,17 +159,26 @@ class _TrainerTrainingFormState extends State<TrainerTrainingForm> {
       exercises: _exercises,
     );
 
-    if (_isEditing) {
-      await _service.updateTraining(training);
-    } else {
-      await _service.saveTraining(training);
-    }
-
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content:
-              Text(_isEditing ? 'Rutina actualizada' : 'Rutina creada')));
-      Navigator.pop(context);
+    try {
+      if (_isEditing) {
+        await _service.updateTraining(training);
+      } else {
+        await _service.saveTraining(training);
+      }
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content:
+                Text(_isEditing ? 'Rutina actualizada' : 'Rutina creada')));
+        Navigator.pop(context);
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error al guardar la rutina. Comprueba tu conexión.')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _saving = false);
     }
   }
 
@@ -184,24 +190,30 @@ class _TrainerTrainingFormState extends State<TrainerTrainingForm> {
       appBar: AppBar(
         title: Text(_isEditing ? 'Editar rutina' : 'Nueva rutina'),
       ),
-      body: ListView(
+      body: Form(
+        key: _formKey,
+        child: ListView(
         padding: const EdgeInsets.all(20),
         children: [
           // ─── DATOS GENERALES ───────────────────────────────
-          TextField(
+          TextFormField(
             controller: _titleCtrl,
             decoration: const InputDecoration(
               labelText: 'Título de la rutina',
               prefixIcon: Icon(Icons.title),
             ),
+            validator: (v) =>
+                (v == null || v.trim().isEmpty) ? 'El título es obligatorio' : null,
           ),
           const SizedBox(height: 16),
-          TextField(
+          TextFormField(
             controller: _typeCtrl,
             decoration: const InputDecoration(
               labelText: 'Tipo (ej: Fuerza, Cardio…)',
               prefixIcon: Icon(Icons.category_outlined),
             ),
+            validator: (v) =>
+                (v == null || v.trim().isEmpty) ? 'El tipo es obligatorio' : null,
           ),
           const SizedBox(height: 20),
 
@@ -344,6 +356,7 @@ class _TrainerTrainingFormState extends State<TrainerTrainingForm> {
             ),
           ),
         ],
+      ),
       ),
     );
   }

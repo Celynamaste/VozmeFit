@@ -45,7 +45,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
                 DropdownButtonFormField<Training>(
                   decoration: const InputDecoration(
                       labelText: 'Entrenamiento (opcional)'),
-                  value: selectedTraining,
+                  initialValue: selectedTraining,
                   items: [
                     const DropdownMenuItem(
                         value: null, child: Text('Sin entrenamiento')),

@@ -87,7 +87,6 @@ class _MyRoutineScreenState extends State<MyRoutineScreen> {
                     _SensationChip(
                       emoji: '😊',
                       label: 'Fácil',
-                      value: 'facil',
                       selected: sensation == 'facil',
                       onTap: () =>
                           setDialogState(() => sensation = 'facil'),
@@ -95,7 +94,6 @@ class _MyRoutineScreenState extends State<MyRoutineScreen> {
                     _SensationChip(
                       emoji: '💪',
                       label: 'Normal',
-                      value: 'normal',
                       selected: sensation == 'normal',
                       onTap: () =>
                           setDialogState(() => sensation = 'normal'),
@@ -103,7 +101,6 @@ class _MyRoutineScreenState extends State<MyRoutineScreen> {
                     _SensationChip(
                       emoji: '🔥',
                       label: 'Duro',
-                      value: 'duro',
                       selected: sensation == 'duro',
                       onTap: () =>
                           setDialogState(() => sensation = 'duro'),
@@ -120,17 +117,23 @@ class _MyRoutineScreenState extends State<MyRoutineScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
-                await service.logWorkout(
-                  trainingId: training.id,
-                  notes: notesCtrl.text.trim(),
-                  weight: double.tryParse(weightCtrl.text),
-                  reps: int.tryParse(repsCtrl.text),
-                  sensation: sensation,
-                );
-                Navigator.pop(dialogCtx);
-                messenger.showSnackBar(
-                  const SnackBar(content: Text('¡Entrenamiento registrado!')),
-                );
+                try {
+                  await service.logWorkout(
+                    trainingId: training.id,
+                    notes: notesCtrl.text.trim(),
+                    weight: double.tryParse(weightCtrl.text),
+                    reps: int.tryParse(repsCtrl.text),
+                    sensation: sensation,
+                  );
+                  Navigator.pop(dialogCtx);
+                  messenger.showSnackBar(
+                    const SnackBar(content: Text('¡Entrenamiento registrado!')),
+                  );
+                } catch (_) {
+                  messenger.showSnackBar(
+                    const SnackBar(content: Text('Error al guardar. Comprueba tu conexión.')),
+                  );
+                }
               },
               child: const Text('Guardar'),
             ),
@@ -240,14 +243,12 @@ class _MyRoutineScreenState extends State<MyRoutineScreen> {
 class _SensationChip extends StatelessWidget {
   final String emoji;
   final String label;
-  final String value;
   final bool selected;
   final VoidCallback onTap;
 
   const _SensationChip({
     required this.emoji,
     required this.label,
-    required this.value,
     required this.selected,
     required this.onTap,
   });

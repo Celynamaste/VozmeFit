@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vozmefit/app/router.dart';
 import 'package:vozmefit/data/models/usuario.dart';
 import 'package:vozmefit/data/services/user_service.dart';
 import 'package:vozmefit/presentation/providers/auth_provider.dart';
@@ -94,7 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onPressed: () async {
               await auth.logout();
               if (context.mounted) {
-                Navigator.pushReplacementNamed(context, '/login');
+                Navigator.pushReplacementNamed(context, AppRouter.login);
               }
             },
           ),
@@ -245,7 +246,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 14),
                 ),
                 onPressed: () =>
-                    Navigator.pushNamed(context, '/trainer-home'),
+                    Navigator.pushNamed(context, AppRouter.trainerHome),
               ),
             ),
           ],

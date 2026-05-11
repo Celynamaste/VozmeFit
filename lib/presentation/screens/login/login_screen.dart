@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vozmefit/app/router.dart';
 import 'package:vozmefit/presentation/providers/auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -23,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   String _routeForRole(AuthProvider auth) {
-    return '/home';
+    return auth.isTrainer ? AppRouter.trainerHome : AppRouter.home;
   }
 
   @override
