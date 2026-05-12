@@ -29,17 +29,17 @@ class _TrainerHomeScreenState extends State<TrainerHomeScreen> {
   Future<void> _delete(String id) async {
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (dialogCtx) => AlertDialog(
         title: const Text('Eliminar rutina'),
         content: const Text('¿Seguro que quieres eliminar esta rutina?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context, false),
+            onPressed: () => Navigator.pop(dialogCtx, false),
             child: const Text('Cancelar'),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            onPressed: () => Navigator.pop(context, true),
+            onPressed: () => Navigator.pop(dialogCtx, true),
             child: const Text('Eliminar'),
           ),
         ],
@@ -71,16 +71,16 @@ class _TrainerHomeScreenState extends State<TrainerHomeScreen> {
   Future<void> _seedData() async {
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (dialogCtx) => AlertDialog(
         title: const Text('Cargar datos de ejemplo'),
         content: const Text(
             '¿Crear 3 entrenamientos de muestra (Principiante, Intermedio, Avanzado)?'),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context, false),
+              onPressed: () => Navigator.pop(dialogCtx, false),
               child: const Text('Cancelar')),
           ElevatedButton(
-              onPressed: () => Navigator.pop(context, true),
+              onPressed: () => Navigator.pop(dialogCtx, true),
               child: const Text('Crear')),
         ],
       ),

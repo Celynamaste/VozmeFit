@@ -57,81 +57,89 @@ class _TrainerTrainingFormState extends State<TrainerTrainingForm> {
     final durationCtrl = TextEditingController(
         text: existing != null ? existing.duration.toString() : '');
     String? selectedType = existing?.type;
-    final messenger = ScaffoldMessenger.of(context);
+    String? errorText;
 
     showDialog(
       context: context,
-      builder: (dialogCtx) => AlertDialog(
-        title: Text(existing == null ? 'Añadir ejercicio' : 'Editar ejercicio'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: nameCtrl,
-                decoration: const InputDecoration(labelText: 'Nombre'),
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: descCtrl,
-                decoration: const InputDecoration(labelText: 'Descripción'),
-                maxLines: 2,
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: durationCtrl,
-                decoration:
-                    const InputDecoration(labelText: 'Duración (segundos)'),
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 12),
-              DropdownButtonFormField<String>(
-                initialValue: selectedType,
-                decoration:
-                    const InputDecoration(labelText: 'Tipo de ejercicio'),
-                items: ExerciseTypes.types
-                    .map((t) =>
-                        DropdownMenuItem(value: t, child: Text(t)))
-                    .toList(),
-                onChanged: (v) => selectedType = v,
-              ),
-            ],
+      builder: (dialogCtx) => StatefulBuilder(
+        builder: (dialogCtx, setDialogState) => AlertDialog(
+          title: Text(existing == null ? 'Añadir ejercicio' : 'Editar ejercicio'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: nameCtrl,
+                  decoration: const InputDecoration(labelText: 'Nombre'),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: descCtrl,
+                  decoration: const InputDecoration(labelText: 'Descripción'),
+                  maxLines: 2,
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: durationCtrl,
+                  decoration:
+                      const InputDecoration(labelText: 'Duración (segundos)'),
+                  keyboardType: TextInputType.number,
+                ),
+                const SizedBox(height: 12),
+                DropdownButtonFormField<String>(
+                  value: selectedType,
+                  decoration:
+                      const InputDecoration(labelText: 'Tipo de ejercicio'),
+                  items: ExerciseTypes.types
+                      .map((t) =>
+                          DropdownMenuItem(value: t, child: Text(t)))
+                      .toList(),
+                  onChanged: (v) => setDialogState(() => selectedType = v),
+                ),
+                if (errorText != null) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    errorText!,
+                    style: const TextStyle(color: Colors.red, fontSize: 12),
+                  ),
+                ],
+              ],
+            ),
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogCtx),
-            child: const Text('Cancelar'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final duration = int.tryParse(durationCtrl.text);
-              if (nameCtrl.text.isEmpty ||
-                  descCtrl.text.isEmpty ||
-                  duration == null ||
-                  selectedType == null) {
-                messenger.showSnackBar(const SnackBar(
-                    content: Text('Completa todos los campos')));
-                return;
-              }
-              final exercise = Exercise(
-                name: nameCtrl.text.trim(),
-                description: descCtrl.text.trim(),
-                duration: duration,
-                type: selectedType!,
-              );
-              setState(() {
-                if (index != null) {
-                  _exercises[index] = exercise;
-                } else {
-                  _exercises.add(exercise);
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogCtx),
+              child: const Text('Cancelar'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final duration = int.tryParse(durationCtrl.text);
+                if (nameCtrl.text.isEmpty ||
+                    descCtrl.text.isEmpty ||
+                    duration == null ||
+                    selectedType == null) {
+                  setDialogState(() => errorText = 'Completa todos los campos');
+                  return;
                 }
-              });
-              Navigator.pop(dialogCtx);
-            },
-            child: const Text('Guardar'),
-          ),
-        ],
+                final exercise = Exercise(
+                  name: nameCtrl.text.trim(),
+                  description: descCtrl.text.trim(),
+                  duration: duration,
+                  type: selectedType!,
+                );
+                setState(() {
+                  if (index != null) {
+                    _exercises[index] = exercise;
+                  } else {
+                    _exercises.add(exercise);
+                  }
+                });
+                Navigator.pop(dialogCtx);
+              },
+              child: const Text('Guardar'),
+            ),
+          ],
+        ),
       ),
     ).then((_) {
       nameCtrl.dispose();

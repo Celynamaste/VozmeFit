@@ -28,8 +28,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
     final textCtrl = TextEditingController();
     Training? selectedTraining;
     DateTime pickedDate = _dateForWeekday(_selectedDay);
-
-    final messenger = ScaffoldMessenger.of(context);
+    String? errorText;
 
     await showDialog(
       context: context,
@@ -45,7 +44,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
                 DropdownButtonFormField<Training>(
                   decoration: const InputDecoration(
                       labelText: 'Entrenamiento (opcional)'),
-                  initialValue: selectedTraining,
+                  value: selectedTraining,
                   items: [
                     const DropdownMenuItem(
                         value: null, child: Text('Sin entrenamiento')),
@@ -67,6 +66,9 @@ class _AgendaScreenState extends State<AgendaScreen> {
                   controller: textCtrl,
                   decoration:
                       const InputDecoration(labelText: 'Nota / descripción'),
+                  onChanged: (_) {
+                    if (errorText != null) setDialog(() => errorText = null);
+                  },
                 ),
                 const SizedBox(height: 12),
                 OutlinedButton.icon(
@@ -83,6 +85,13 @@ class _AgendaScreenState extends State<AgendaScreen> {
                     if (picked != null) setDialog(() => pickedDate = picked);
                   },
                 ),
+                if (errorText != null) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    errorText!,
+                    style: const TextStyle(color: Colors.red, fontSize: 12),
+                  ),
+                ],
               ],
             ),
           ),
@@ -95,8 +104,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
               onPressed: () {
                 final text = textCtrl.text.trim();
                 if (text.isEmpty) {
-                  messenger.showSnackBar(
-                      const SnackBar(content: Text('Escribe una descripción')));
+                  setDialog(() => errorText = 'Escribe una descripción');
                   return;
                 }
                 _service.addItem(

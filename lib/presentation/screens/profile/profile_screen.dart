@@ -67,14 +67,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
       level: _selectedLevel,
     );
 
-    await _userService.saveUser(updated);
-    await auth.reloadCurrentUser();
+    try {
+      await _userService.saveUser(updated);
+      await auth.reloadCurrentUser();
 
-    if (mounted) {
-      setState(() => _saving = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Perfil actualizado')),
-      );
+      if (mounted) {
+        setState(() => _saving = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Perfil actualizado')),
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        setState(() => _saving = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error al guardar. Comprueba tu conexión.')),
+        );
+      }
     }
   }
 
