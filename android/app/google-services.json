@@ -12,7 +12,12 @@
           "package_name": "com.celia.vozmefit"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "966539970399-2iov2gufjpt3pr35gp3c7q78ka2ohdfj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyA-8JFahnbHf7V1K1ul_X4OReVWR6h6fmI"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "966539970399-2iov2gufjpt3pr35gp3c7q78ka2ohdfj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "966539970399-2qg2ooigkjmd28ekgdqkrdf4st7oo17c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.vozmefit"
+              }
+            }
+          ]
         }
       }
     },
@@ -31,7 +48,20 @@
           "package_name": "com.example.vozmefit"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "966539970399-2e45r4j4ogj1p12voo4nddn4ma4c3971.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.vozmefit",
+            "certificate_hash": "c4b0af3575543daf9c3ee1bad351493554756507"
+          }
+        },
+        {
+          "client_id": "966539970399-2iov2gufjpt3pr35gp3c7q78ka2ohdfj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyA-8JFahnbHf7V1K1ul_X4OReVWR6h6fmI"
@@ -39,7 +69,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "966539970399-2iov2gufjpt3pr35gp3c7q78ka2ohdfj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "966539970399-2qg2ooigkjmd28ekgdqkrdf4st7oo17c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.vozmefit"
+              }
+            }
+          ]
         }
       }
     }

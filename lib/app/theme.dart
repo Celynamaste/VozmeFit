@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 // Colores corporativos VozmeFit
 const Color _aquaBlue = Color(0xFF00B4D8);       // Azul agua principal
-const Color _aquaBluLight = Color(0xFF48CAE4);    // Azul agua claro (acento)
+const Color _aquaBluLight = Color(0xFF48CAE4);    // Azul agua claro 
 const Color _black = Color(0xFF080808);           // Negro de fondo
 const Color _surface = Color(0xFF141414);         // Negro de tarjetas y AppBar
 const Color _white = Color(0xFFF0F0F0);           // Blanco para texto principal

@@ -37,8 +37,8 @@ class DefaultFirebaseOptions {
 
   // 🟢 ANDROID
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: "AIzaSyAGSZp8T3y3s0A8hwKjrc6vVuar6WyCEvI",
-    appId: "1:966539970399:android:efaea7af5ee71d1a6b98ea",
+    apiKey: "AIzaSyA-8JFahnbHf7V1K1ul_X4OReVWR6h6fmI",
+    appId: "1:966539970399:android:68f39f31a8c9f8fe6b98ea",
     messagingSenderId: "966539970399",
     projectId: "vozmefit",
     storageBucket: "vozmefit.firebasestorage.app",

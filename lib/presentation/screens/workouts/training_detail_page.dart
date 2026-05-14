@@ -28,7 +28,7 @@ const _exerciseImagesByName = {
   'Sentadillas':             'https://images.unsplash.com/photo-1567598508481-65985588e295?w=600&q=80',
   'Flexiones de rodillas':   'https://images.unsplash.com/photo-1598971639058-fab3c3109a00?w=600&q=80',
   'Plancha':                 'https://images.unsplash.com/photo-1566241142559-40e1dab266c6?w=600&q=80',
-  'Puente de glúteos':       'https://images.unsplash.com/photo-1652363723017-a7b7d24fcfde?w=600&q=80',
+  'Puente de glúteos':       'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&q=80',
   'Marcha en el sitio':      'https://images.unsplash.com/photo-1538805060514-97d9cc17730c?w=600&q=80',
   // HIIT
   'Burpees':                 'https://images.unsplash.com/photo-1739283180407-21e27d5c0735?w=600&q=80',

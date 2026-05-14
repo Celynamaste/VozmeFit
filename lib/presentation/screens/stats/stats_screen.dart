@@ -8,11 +8,11 @@ class StatsScreen extends StatelessWidget {
   static (String, Color) _sensationDisplay(String sensation) {
     switch (sensation) {
       case 'facil':
-        return ('😊 Fácil', const Color(0xFF4CAF50));
+        return (' Fácil', const Color(0xFF4CAF50));
       case 'duro':
-        return ('🔥 Duro', const Color(0xFFFF5722));
+        return (' Duro', const Color(0xFFFF5722));
       default:
-        return ('💪 Normal', const Color(0xFF00B4D8));
+        return ('Normal', const Color(0xFF00B4D8));
     }
   }
 

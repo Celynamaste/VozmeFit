@@ -138,21 +138,6 @@ La app incluye un generador de datos de ejemplo. Inicia sesión como **entrenado
 
 ---
 
-## Documentación TFG
-
-La documentación completa del proyecto se encuentra en [docs/TFG_VozmeFit.md](docs/TFG_VozmeFit.md), incluyendo:
-
-- Abstract (ES/EN)
-- Justificación y comparativa de aplicaciones similares
-- RFTP completo (Requisitos, Funciones, Tareas, Pruebas)
-- Casos de uso con tablas detalladas
-- Diagramas de arquitectura, clases y navegación
-- Estructura de base de datos Firestore
-- Planificación y presupuesto
-- Trabajos futuros
-
----
-
 ## Licencia
 
 Proyecto académico — Trabajo de Fin de Grado. No está prevista su distribución comercial.

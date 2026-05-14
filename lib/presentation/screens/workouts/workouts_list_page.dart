@@ -3,6 +3,19 @@ import '../../../data/firebase/training_service.dart';
 import '../../../data/models/training.dart';
 import 'training_detail_page.dart';
 
+// Imagen por defecto según nivel cuando el training no tiene imageUrl
+const _defaultImageByLevel = {
+  'Principiante': 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800&q=80',
+  'Intermedio':   'https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=800&q=80',
+  'Avanzado':     'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&q=80',
+};
+
+String _resolveImage(Training t) =>
+    t.imageUrl.isNotEmpty
+        ? t.imageUrl
+        : (_defaultImageByLevel[t.level] ??
+            'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800&q=80');
+
 class WorkoutsListPage extends StatefulWidget {
   const WorkoutsListPage({super.key});
 
@@ -142,19 +155,18 @@ class _WorkoutsListPageState extends State<WorkoutsListPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (training.imageUrl.isNotEmpty)
-                              Image.network(
-                                training.imageUrl,
+                            Image.network(
+                              _resolveImage(training),
+                              height: 160,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => Container(
                                 height: 160,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) => Container(
-                                  height: 160,
-                                  color: primary.withOpacity(0.1),
-                                  child: Icon(Icons.fitness_center,
-                                      color: primary, size: 40),
-                                ),
+                                color: primary.withOpacity(0.1),
+                                child: Icon(Icons.fitness_center,
+                                    color: primary, size: 40),
                               ),
+                            ),
                             Padding(
                               padding: const EdgeInsets.all(12),
                               child: Column(
