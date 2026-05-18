@@ -172,7 +172,6 @@ class TrainingDetailPage extends StatelessWidget {
     final repsCtrl = TextEditingController();
     String sensation = 'normal';
     final service = WorkoutLogService();
-    final messenger = ScaffoldMessenger.of(context);
 
     showDialog(
       context: context,
@@ -257,14 +256,18 @@ class TrainingDetailPage extends StatelessWidget {
                     reps: int.tryParse(repsCtrl.text),
                     sensation: sensation,
                   );
-                  Navigator.pop(dialogCtx);
-                  messenger.showSnackBar(
-                    const SnackBar(content: Text('¡Entrenamiento registrado!')),
-                  );
+                  if (dialogCtx.mounted) Navigator.pop(dialogCtx);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('¡Entrenamiento registrado!')),
+                    );
+                  }
                 } catch (_) {
-                  messenger.showSnackBar(
-                    const SnackBar(content: Text('Error al guardar. Comprueba tu conexión.')),
-                  );
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Error al guardar. Comprueba tu conexión.')),
+                    );
+                  }
                 }
               },
               child: const Text('Guardar'),
