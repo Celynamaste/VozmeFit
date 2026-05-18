@@ -130,7 +130,8 @@ class _MyRoutineScreenState extends State<MyRoutineScreen> {
                       const SnackBar(content: Text('¡Entrenamiento registrado!')),
                     );
                   }
-                } catch (_) {
+                } catch (e, st) {
+                  debugPrint('logWorkout error: $e\n$st');
                   if (mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Error al guardar. Comprueba tu conexión.')),

@@ -262,7 +262,8 @@ class TrainingDetailPage extends StatelessWidget {
                       const SnackBar(content: Text('¡Entrenamiento registrado!')),
                     );
                   }
-                } catch (_) {
+                } catch (e, st) {
+                  debugPrint('logWorkout error: $e\n$st');
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Error al guardar. Comprueba tu conexión.')),

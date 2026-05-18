@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:vozmefit/data/services/workout_log_service.dart';
 
-class StatsScreen extends StatelessWidget {
+class StatsScreen extends StatefulWidget {
   const StatsScreen({super.key});
+
+  @override
+  State<StatsScreen> createState() => _StatsScreenState();
+}
+
+class _StatsScreenState extends State<StatsScreen> {
+  late final Stream<List<Map<String, dynamic>>> _logsStream;
 
   // Convierte 'facil' / 'normal' / 'duro' a emoji + color
   static (String, Color) _sensationDisplay(String sensation) {
@@ -17,9 +24,14 @@ class StatsScreen extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _logsStream = WorkoutLogService().getLogs();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final primary = Theme.of(context).colorScheme.primary;
-    final service = WorkoutLogService();
 
     return Scaffold(
       appBar: AppBar(
@@ -27,7 +39,7 @@ class StatsScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: StreamBuilder<List<Map<String, dynamic>>>(
-        stream: service.getLogs(),
+        stream: _logsStream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
