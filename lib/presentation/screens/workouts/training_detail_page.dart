@@ -58,10 +58,17 @@ const _exerciseImagesByName = {
 
 String? _imageForExerciseName(String name) => _exerciseImagesByName[name];
 
-class TrainingDetailPage extends StatelessWidget {
+class TrainingDetailPage extends StatefulWidget {
   final Training training;
 
   const TrainingDetailPage({super.key, required this.training});
+
+  @override
+  State<TrainingDetailPage> createState() => _TrainingDetailPageState();
+}
+
+class _TrainingDetailPageState extends State<TrainingDetailPage> {
+  Training get training => widget.training;
 
   Widget _gradientBannerSmall(String type) {
     final colors = _exerciseColors[type] ??
@@ -166,7 +173,7 @@ class TrainingDetailPage extends StatelessWidget {
     }).toList();
   }
 
-  void _openLogDialog(BuildContext context) {
+  void _openLogDialog() {
     final notesCtrl = TextEditingController();
     final weightCtrl = TextEditingController();
     final repsCtrl = TextEditingController();
@@ -257,14 +264,14 @@ class TrainingDetailPage extends StatelessWidget {
                     sensation: sensation,
                   );
                   if (dialogCtx.mounted) Navigator.pop(dialogCtx);
-                  if (context.mounted) {
+                  if (mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('¡Entrenamiento registrado!')),
                     );
                   }
                 } catch (e, st) {
                   debugPrint('logWorkout error: $e\n$st');
-                  if (context.mounted) {
+                  if (mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Error al guardar. Comprueba tu conexión.')),
                     );
@@ -292,7 +299,7 @@ class TrainingDetailPage extends StatelessWidget {
         title: Text(training.title),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _openLogDialog(context),
+        onPressed: _openLogDialog,
         icon: const Icon(Icons.check_circle_outline),
         label: const Text('Registrar'),
       ),
